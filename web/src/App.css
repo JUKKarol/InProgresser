@@ -47,7 +47,7 @@ form.login,
 form.register {
   max-width: 400px;
   margin: 0 auto;
-  margin-top: 200px;
+  margin-top: 100px;
 }
 input {
   display: block;
@@ -66,4 +66,7 @@ button {
   color: #fff;
   border-radius: 5px;
   padding: 7px 0;
+}
+form h1 {
+  text-align: center;
 }
