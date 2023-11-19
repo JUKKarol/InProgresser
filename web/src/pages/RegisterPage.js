@@ -1,8 +1,8 @@
-import { userState } from "react";
+import { useState } from "react";
 
 export default function RegisterPage() {
-  const [username, setUsername] = userState("");
-  const [password, setPassword] = userState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   async function register(ev) {
     ev.preventDefault();
