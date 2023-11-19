@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-app.get("/register", (req, res) => {
+app.post("/register", (req, res) => {
   res.json("test ok2");
 });
 
