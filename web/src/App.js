@@ -2,30 +2,17 @@ import "./App.css";
 import Task from "./Task";
 import Header from "./Header";
 import { Routes, Route } from "react-router-dom";
+import Layout from "./Layout";
+import IndexPage from "./pages/IndexPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
     <Routes>
-      <Route
-        index
-        element={
-          <main>
-            <Header />
-            <Task />
-            <Task />
-            <Task />
-          </main>
-        }
-      />
-      <Route
-        path={"/login"}
-        element={
-          <main>
-            <Header />
-            <div>login page</div>
-          </main>
-        }
-      />
+      <Route path="/" element={<Layout />}>
+        <Route index element={<IndexPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Route>
     </Routes>
   );
 }
