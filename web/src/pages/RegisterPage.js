@@ -9,7 +9,7 @@ export default function RegisterPage() {
     await fetch("http://localhost:4000/register", {
       method: "POST",
       body: JSON.stringify({ username, password }),
-      headers: { "Contetnt-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
     });
   }
 
