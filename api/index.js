@@ -4,8 +4,11 @@ const mongoose = require("mongoose");
 const User = require("./models/User");
 const bcrypt = require("bcryptjs");
 const app = express();
+const jwt = require("jsonwebtoken");
 
 const salt = bcrypt.genSaltSync(10);
+const secret = "hf9023udhwf0932u4";
+const failedLoginMessage = "Wrong login or password";
 
 app.use(cors());
 app.use(express.json());
@@ -33,12 +36,15 @@ app.post("/login", async (req, res) => {
     const PassOk = bcrypt.compareSync(password, userDoc.password);
 
     if (PassOk) {
-      res.status(200).json("token");
+      jwt.sign({ username, id: userDoc._id }, secret, {}, (error, token) => {
+        if (error) throw error;
+        res.cookie("token", token).json("ok");
+      });
     } else {
-      res.status(400).json("Wrong login or password");
+      res.status(400).json(failedLoginMessage);
     }
   } else {
-    res.status(400).json("User not found");
+    res.status(400).json(failedLoginMessage);
   }
 });
 
