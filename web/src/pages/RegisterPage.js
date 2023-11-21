@@ -6,11 +6,17 @@ export default function RegisterPage() {
 
   async function register(ev) {
     ev.preventDefault();
-    await fetch("http://localhost:4000/register", {
+    const response = await fetch("http://localhost:4000/register", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },
     });
+
+    if (response.status === 200) {
+      alert("Registration completed");
+    } else {
+      alert("Registration failed");
+    }
   }
 
   return (
@@ -18,13 +24,13 @@ export default function RegisterPage() {
       <h1>Register</h1>
       <input
         type="text"
-        placeholder="username"
+        placeholder="Username"
         value={username}
         onChange={(ev) => setUsername(ev.target.value)}
       ></input>
       <input
         type="password"
-        placeholder="password"
+        placeholder="Password"
         value={password}
         onChange={(ev) => setPassword(ev.target.value)}
       ></input>
