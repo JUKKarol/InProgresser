@@ -10,7 +10,7 @@ const salt = bcrypt.genSaltSync(10);
 const secret = "hf9023udhwf0932u4";
 const failedLoginMessage = "Wrong login or password";
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 
 mongoose.connect("mongodb://localhost:27017/");
