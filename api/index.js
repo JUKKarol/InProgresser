@@ -2,10 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
+const Task = require("./models/Task");
 const bcrypt = require("bcryptjs");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cookieParse = require("cookie-parser");
+const multer = require("multer");
+const uploadMiddleware = multer({ dest: "uploads/" });
+const fs = require("fs");
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "hf9023udhwf0932u4";
@@ -59,11 +63,26 @@ app.get("/profile", (req, res) => {
     if (error) throw error;
     res.json(info);
   });
-  res.json(req.cookies);
 });
 
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json("ok");
+});
+
+app.post("/task", uploadMiddleware.single("file"), async (req, res) => {
+  const { originalname, path } = req.file;
+  const parts = originalname.split(".");
+  const ext = parts[parts.length - 1];
+  const newPath = path + "." + ext;
+  fs.renameSync(path, newPath);
+
+  const title = req.body.title;
+  const taskDoc = await Task.create({
+    title,
+    cover: newPath,
+  });
+
+  res.json({ taskDoc });
 });
 
 app.listen(4000);
