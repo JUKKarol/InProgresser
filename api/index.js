@@ -18,6 +18,7 @@ const failedLoginMessage = "Wrong login or password";
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect("mongodb://localhost:27017/");
 
@@ -85,13 +86,22 @@ app.post("/task", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
 
-  const title = req.body.title;
-  const taskDoc = await Task.create({
-    title,
-    cover: newPath,
-  });
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, async (error, info) => {
+    if (error) throw error;
 
-  res.json({ taskDoc });
+    const title = req.body.title;
+    const taskDoc = await Task.create({
+      title,
+      cover: newPath,
+      author: info.id,
+    });
+    res.json({ taskDoc });
+  });
+});
+
+app.get("/task", async (req, res) => {
+  res.json(await Task.find().populate("author", ["username"]));
 });
 
 app.listen(4000);

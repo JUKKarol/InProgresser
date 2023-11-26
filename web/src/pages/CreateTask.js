@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 export default function CreateTask() {
   const [title, setTitle] = useState("");
   const [files, setFiles] = useState("");
+  const [redirect, setRedirect] = useState("");
 
   async function createNewTask(ev) {
     const data = new FormData();
@@ -10,12 +12,20 @@ export default function CreateTask() {
     data.append("file", files[0]);
 
     ev.preventDefault();
-    await fetch("http://localhost:4000/task", {
+    const response = await fetch("http://localhost:4000/task", {
       method: "POST",
       body: data,
+      credentials: "include",
     });
+
+    if (response.ok) {
+      setRedirect(true);
+    }
   }
 
+  if (redirect) {
+    return <Navigate to={"/"} />;
+  }
   return (
     <form onSubmit={createNewTask}>
       <input

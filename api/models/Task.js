@@ -9,6 +9,7 @@ const TaskSchema = new Schema({
     maxlength: 30,
   },
   cover: String,
+  author: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 const TaskModel = model("Task", TaskSchema);
