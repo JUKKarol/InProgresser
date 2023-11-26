@@ -6,7 +6,7 @@ const Task = require("./models/Task");
 const bcrypt = require("bcryptjs");
 const app = express();
 const jwt = require("jsonwebtoken");
-const cookieParse = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
@@ -17,7 +17,7 @@ const failedLoginMessage = "Wrong login or password";
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
-app.use(cookieParse());
+app.use(cookieParser());
 
 mongoose.connect("mongodb://localhost:27017/");
 
@@ -59,8 +59,17 @@ app.post("/login", async (req, res) => {
 
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json({ message: "Token not provided" });
+  }
+
   jwt.verify(token, secret, {}, (error, info) => {
-    if (error) throw error;
+    if (error) {
+      console.error(error);
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
     res.json(info);
   });
 });
